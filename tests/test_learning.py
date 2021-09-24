@@ -1,22 +1,5 @@
 import pandas as pd
-from learning import k_fold, euclidean_distance, k_nearest_neighbors
-
-
-def test_k_fold():
-    df = pd.DataFrame({'x': ['x1', 'x2', 'x3', 'x4', 'x5'],
-                       'y': [1, 2, 3, 4, 5]})
-    folds, valid = k_fold(df, 'y', categorical=False)
-
-    test_folds = {
-        0: pd.DataFrame({'x': ['x1'], 'y': [1]}),
-        1: pd.DataFrame({'x': ['x2'], 'y': [2]}),
-        2: pd.DataFrame({'x': ['x3'], 'y': [3]}),
-        3: pd.DataFrame({'x': ['x4'], 'y': [4]}),
-        4: pd.DataFrame({'x': ['x5'], 'y': [5]})
-    }
-    assert len(valid) == 0
-    assert folds[0].equals(test_folds[0])
-
+from learning import euclidean_distance, k_nearest_neighbors, k_fold
 
 def test_euclidean_distance():
     df1 = pd.DataFrame({'x': [1, 2, 3, 4, 5]})
@@ -43,3 +26,18 @@ def test_k_nearest_neighbor():
     knn = k_nearest_neighbors(train, test, 'class', 3)
     assert knn == [0, 0, 0, 0]
 
+
+def test_k_fold():
+    df = pd.DataFrame({'x': ['x1', 'x2', 'x3', 'x4', 'x5'],
+                       'y': [1, 2, 3, 4, 5]})
+    folds, valid = k_fold(df, 'y', categorical=False)
+
+    test_folds = {
+        0: pd.DataFrame({'x': ['x1'], 'y': [1]}),
+        1: pd.DataFrame({'x': ['x2'], 'y': [2]}),
+        2: pd.DataFrame({'x': ['x3'], 'y': [3]}),
+        3: pd.DataFrame({'x': ['x4'], 'y': [4]}),
+        4: pd.DataFrame({'x': ['x5'], 'y': [5]})
+    }
+    assert len(valid) == 0
+    assert folds[0].equals(test_folds[0])

@@ -65,6 +65,7 @@ def test_discretization():
     assert bin_width['Age'].to_list() == [0, 0, 1, 0]
     assert bin_frequency['Age'].to_list() == [0, 0, 1, 1]
 
+
 def test_standardization():
     df_train = pd.DataFrame({'x': ['0', '1', '2', '3'],
                              'y': [3, 4, 7, 5]})

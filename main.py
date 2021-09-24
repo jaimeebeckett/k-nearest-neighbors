@@ -1,5 +1,5 @@
 from processing import load_data, imputation, ordinal, nominal, standardization, discretization
-from learning import k_fold, k_nearest_neighbors
+from learning import k_nearest_neighbors, k_fold
 from evaluation import majority_prediction, eval_metric
 import numpy as np
 
@@ -57,20 +57,44 @@ if __name__ == '__main__':
     machine = discretization(machine, 'MYCT', 5, width=False)
 
     print('Car Dataset:')
-    folds, validation = k_fold(car, 'class')
-    eval_list = []
+    data = car
+
+    best_k = 1
+    best_result = 0
+    folds, validation = k_fold(data, 'class', validation=True)
+    if not validation.empty:
+        validation_folds = k_fold(validation, 'class')[0]
+        k_values = [1, 2, 3, 4, 5]
+        for i in range(len(k_values)):
+            x = validation_folds[i]
+            train = data.drop(validation_folds[i].index)
+            test = validation_folds[i]
+            predicted = k_nearest_neighbors(train, test, 'class', k_values[i])
+            test_labels = test['class'].to_list()
+            results = eval_metric(test['class'].to_list(), predicted, 'classification')
+            if results > best_result:
+                best_k = k_values[i]
+                best_result = results
+
+    print(f"Best k value: {best_k}")
+    results = {
+        'Fold #': [],
+        'Training Size': [],
+        'Test Size': [],
+        'Accuracy of Error': []
+    }
     for i in range(5):
-        test_indices = folds[i].index
-        test = folds[i].reset_index(drop=False)
-        train = car.drop(test_indices).reset_index(drop=False)
-        predicted = k_nearest_neighbors(train, test, 'class', 3)
+        train = data.drop(folds[i].index)
+        test = folds[i]
+        predicted = k_nearest_neighbors(train, test, 'class', best_k)
         test_labels = test['class'].to_list()
-        results = eval_metric(test_labels, predicted, 'classification')
-        eval_list.append(results)
-        print(f'Fold #{i}:')
-        print(f'Training Size: {len(train)}, Test Size: {len(test)}')
-        print(f'Acuracy of Error: {results}')
+        eval_results = eval_metric(test_labels, predicted, 'classification')
+        results['Fold #'].append(i)
+        results['Training Size'].append(len(train))
+        results['Test Size'].append(len(test))
+        results['Accuracy of Error'].append(eval_results)
+
     print()
-    print(f'The Best Eval Score: {max(eval_list)}')
-    print(f'The Average of All Eval Scores: {sum(eval_list)/len(eval_list)}')
+    print(f'The Best Eval Score: {max(results["Accuracy of Error"])}')
+    print(f'The Average of All Eval Scores: {sum(results["Accuracy of Error"])/len(results["Accuracy of Error"])}')
 

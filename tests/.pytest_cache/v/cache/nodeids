@@ -7,6 +7,7 @@
   "test_processing.py::test_cross_validation",
   "test_processing.py::test_discretization",
   "test_processing.py::test_imputation",
+  "test_processing.py::test_k_fold",
   "test_processing.py::test_load_data",
   "test_processing.py::test_nominal",
   "test_processing.py::test_ordinal",
