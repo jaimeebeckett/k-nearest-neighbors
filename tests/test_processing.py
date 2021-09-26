@@ -55,7 +55,6 @@ def test_nominal():
     nominal_fruit = nominal(df, ['Favorite_Fruit'])
     assert nominal_fruit['Favorite_Fruit'].to_list() == ['0001', '0010', '0100', '1000']
 
-
 def test_discretization():
     df = pd.DataFrame({'Name': ['Smith', 'Larkin', 'Miller', 'Hayes'],
                        'Age': [22, 23, 24, 23]})

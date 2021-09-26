@@ -1,6 +1,7 @@
 [
   "test_Load.py::test_load_data",
   "test_algorithms.py::test_k_fold",
+  "test_learning.py::test_condensed_nearest_neighbor",
   "test_learning.py::test_euclidean_distance",
   "test_learning.py::test_k_fold",
   "test_learning.py::test_k_nearest_neighbor",
