@@ -19,13 +19,20 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2ff91063-0c10-4839-aa84-9ce9025c169a" name="Changes" comment="rewrote the knn function to be faster">
+    <list default="true" id="2ff91063-0c10-4839-aa84-9ce9025c169a" name="Changes" comment="moved cross validation to learning">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/learning.py" beforeDir="false" afterPath="$PROJECT_DIR$/learning.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/.pytest_cache/v/cache/nodeids" beforeDir="false" afterPath="$PROJECT_DIR$/tests/.pytest_cache/v/cache/nodeids" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_learning.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_learning.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_processing.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_processing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/processing.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/.pytest_cache/CACHEDIR.TAG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/.pytest_cache/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/.pytest_cache/v/cache/lastfailed" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/.pytest_cache/v/cache/nodeids" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/.pytest_cache/v/cache/stepwise" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_learning.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_processing.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +49,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitSEFilterConfiguration">
     <file-type-list>
@@ -107,7 +115,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_learning.test_condensed_nearest_neighbor" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_processing.test_k_fold" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="processing-pipeline" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -119,11 +127,11 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_learning.test_condensed_nearest_neighbor&quot;" />
+      <option name="_new_target" value="&quot;test_processing.test_k_fold&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_learning.test_euclidean_distance" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_processing.test_load_data" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="processing-pipeline" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -135,11 +143,11 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_learning.test_euclidean_distance&quot;" />
+      <option name="_new_target" value="&quot;test_processing.test_load_data&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_learning.test_k_fold" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_processing.test_nominal" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="processing-pipeline" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -151,11 +159,11 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_learning.test_k_fold&quot;" />
+      <option name="_new_target" value="&quot;test_processing.test_nominal&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_learning.test_k_nearest_neighbor" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_processing.test_ordinal" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="processing-pipeline" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -167,17 +175,17 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_learning.test_k_nearest_neighbor&quot;" />
+      <option name="_new_target" value="&quot;test_processing.test_ordinal&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
-        <item itemvalue="Python tests.pytest for test_learning.test_condensed_nearest_neighbor" />
-        <item itemvalue="Python tests.pytest for test_learning.test_k_fold" />
-        <item itemvalue="Python tests.pytest for test_learning.test_k_nearest_neighbor" />
-        <item itemvalue="Python tests.pytest for test_learning.test_euclidean_distance" />
+        <item itemvalue="Python tests.pytest for test_processing.test_load_data" />
+        <item itemvalue="Python tests.pytest for test_processing.test_k_fold" />
+        <item itemvalue="Python tests.pytest for test_processing.test_ordinal" />
+        <item itemvalue="Python tests.pytest for test_processing.test_nominal" />
       </list>
     </recent_temporary>
   </component>
@@ -256,7 +264,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632505604241</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="moved cross validation to learning">
+      <created>1632669537055</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1632669537055</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -268,6 +283,17 @@
               <option name="CUSTOM_BOOLEAN_PROPERTIES">
                 <map>
                   <entry key="Show.Git.Branches" value="true" />
+                </map>
+              </option>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
                 </map>
               </option>
             </State>
@@ -287,10 +313,18 @@
     <MESSAGE value="renamed load to processing, adding test_imputation, test_ordinal" />
     <MESSAGE value="first commit" />
     <MESSAGE value="rewrote the knn function to be faster" />
-    <option name="LAST_COMMIT_MESSAGE" value="rewrote the knn function to be faster" />
+    <MESSAGE value="moved cross validation to learning" />
+    <option name="LAST_COMMIT_MESSAGE" value="moved cross validation to learning" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/evaluation.py</url>
+          <line>42</line>
+          <option name="timeStamp" value="59" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
