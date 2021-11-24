@@ -19,20 +19,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2ff91063-0c10-4839-aa84-9ce9025c169a" name="Changes" comment="moved cross validation to learning">
+    <list default="true" id="2ff91063-0c10-4839-aa84-9ce9025c169a" name="Changes" comment="refactored">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluation.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/learning.py" beforeDir="false" afterPath="$PROJECT_DIR$/learning.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/processing.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/.pytest_cache/CACHEDIR.TAG" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/.pytest_cache/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/.pytest_cache/v/cache/lastfailed" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/.pytest_cache/v/cache/nodeids" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/.pytest_cache/v/cache/stepwise" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_learning.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_processing.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -271,7 +261,14 @@
       <option name="project" value="LOCAL" />
       <updated>1632669537055</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="refactored">
+      <created>1637637551689</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1637637551689</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -314,15 +311,41 @@
     <MESSAGE value="first commit" />
     <MESSAGE value="rewrote the knn function to be faster" />
     <MESSAGE value="moved cross validation to learning" />
-    <option name="LAST_COMMIT_MESSAGE" value="moved cross validation to learning" />
+    <MESSAGE value="refactored" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactored" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/evaluation.py</url>
-          <line>42</line>
-          <option name="timeStamp" value="59" />
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>194</line>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>190</line>
+          <option name="timeStamp" value="37" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>193</line>
+          <option name="timeStamp" value="40" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>189</line>
+          <option name="timeStamp" value="42" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/learning.py</url>
+          <line>98</line>
+          <option name="timeStamp" value="45" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/learning.py</url>
+          <line>52</line>
+          <option name="timeStamp" value="46" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>

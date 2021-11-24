@@ -1,6 +1,6 @@
 from dataset import Data, ClassificationData
-from learning import KNearestNeighbor, CondensedNearestNeighbor, EditedNearestNeighbor
-from evaluation import cross_validation, tuning, classification, mse
+from learning import NearestNeighbor, CondensedNearestNeighbor, EditedNearestNeighbor
+from evaluation import cross_validation, classification, mse
 import numpy as np
 import time
 
@@ -72,11 +72,12 @@ def load_vote():
 def load_abalone():
     abalone_file = 'data/raw/abalone.data'
     abalone_data = Data('abalone', abalone_file, 'Rings', names=['Sex', 'Length', 'Diameter', 'Height',
-                                                            'Whole weight', 'Shuck ed weight',
+                                                            'Whole weight', 'Shucked weight',
                                                             'Viscera weight', 'Shell weight',
                                                             'Rings'])
     abalone_data.nominal('Sex')
-
+    abalone_data.normalization(['Length', 'Diameter', 'Height', 'Whole weight', 'Shucked weight',
+                                'Viscera weight', 'Shell weight', 'Rings'])
     return abalone_data
 
 
@@ -110,123 +111,123 @@ if __name__ == '__main__':
     forest = load_forest_fire()
     machine = load_machine()
 
-    for data in [car, cancer, vote]:
-        knn = KNearestNeighbor(data.label, k=1)
-        best_score, best_k = tuning(data, knn, classification)
-        print(f'Name: {data.name}')
-        print(f'Best Fold: {best_k}')
+    def split_train_test(dataset):
+        label = dataset.label
+        dataset.k_fold(validation=True)
 
-        scores = cross_validation(knn, data.df, data.folds, data.label, classification)
-        print(f'Best Fold: {np.argmax(scores)}, Best Score: {max(scores)}')
+        train_x = dataset.validation_train.drop(label, axis=1).to_numpy()
+        train_y = dataset.validation_train[label].to_numpy()
+        test_x = dataset.validation_test.drop(label, axis=1).to_numpy()
+        test_y = dataset.validation_test[label].to_numpy()
+
+        return train_x, train_y, test_x, test_y
+
+    def evaluate(nn, train_x, train_y, test_x, test_y, evaluation_method):
+        prediction = nn.predict(train_x, train_y, test_x)
+        return evaluation_method(test_y, prediction)
+
+    def regression_tune(nn, train_x, train_y, test_x, test_y, evaluation_method):
+        nn_score = np.inf
+        nn_sigma = None
+        for s in [1, 0.8, 0.5, 0.3, 0.15, 0.1, 0.005, 0.001, 0.0008, 0.0005, 0.0003]:
+            nn.sigma = s
+            eval_score = evaluate(nn, train_x, train_y, test_x, test_y, evaluation_method)
+            if eval_score < nn_score:
+                nn_score = eval_score
+                nn_sigma = s
+
+        return nn_score, nn_sigma
+
+
+    for data in [car, cancer, vote, abalone, forest, machine]:
+        class_data = isinstance(data, ClassificationData)
+        evaluation = classification if class_data else mse
+        best_k_knn = 0
+        best_sigma_knn = None
+        best_k_cnn = 0
+        best_sigma_cnn = None
+        best_k_enn = 0
+        best_sigma_enn = None
+        best_score_knn = 0 if class_data else np.inf
+        best_score_cnn = 0 if class_data else np.inf
+        best_score_enn = 0 if class_data else np.inf
+        train, train_label, test, test_label = split_train_test(data)
+        knn = NearestNeighbor(data.label, k=1)
+        cnn = CondensedNearestNeighbor(data.label, k=1)
+        # enn = CondensedNearestNeighbor(data.label, k=1)
+
+        for i in range(1, 15, 2):
+            knn.k = i
+            cnn.k = i
+            if class_data:
+                knn_score = evaluate(knn, train, train_label, test, test_label, evaluation)
+                cnn_score = evaluate(cnn, train, train_label, test, test_label, evaluation)
+                if knn_score > best_score_knn:
+                    best_score_knn = knn_score
+                    best_k_knn = i
+                if cnn_score > best_score_cnn:
+                    best_score_cnn = cnn_score
+                    best_k_cnn = i
+            else:
+                knn_score, knn_sigma = regression_tune(knn, train, train_label, test, test_label, evaluation)
+                cnn_score, cnn_sigma = regression_tune(cnn, train, train_label, test, test_label, evaluation)
+                if knn_score < best_score_knn:
+                    best_score_knn = knn_score
+                    best_k_knn = i
+                    best_sigma_knn = knn_sigma
+                if cnn_score < best_score_cnn:
+                    best_score_cnn = cnn_score
+                    best_k_cnn = i
+                    best_sigma_cnn = cnn_sigma
+            # if (class_data and score > best_score_knn) or (not class_data and score < best_score_knn):
+            #     best_score_knn = score
+            #     best_k_knn = i
+            #     if not class_data:
+            #         best_sigma_knn = sigma
+
+        knn.k = best_k_knn
+        knn.sigma = best_sigma_knn
+        cnn.k = best_k_cnn
+        cnn.sigma = best_sigma_cnn
+        # enn.k = beset_k_enn
+
+        knn_scores = knn.cross_validation(data.df, data.folds, data.label, evaluation)
+        cnn_scores = cnn.cross_validation(data.df, data.folds, data.label, evaluation)
+        # enn_scores = enn.cross_validation(data.df, data.folds, data.label, evaluation)
+
+        print()
+        print(f'Name: {data.name}')
+        print('K-Nearest Neighbors:')
+        print(f'Best K: {best_k_knn}')
+        print(f'Best Fold: {np.argmax(knn_scores)}, Best Score: {max(knn_scores)}')
+        print()
+        print('Condensed Nearest Neighbors:')
+        print(f'Best K: {best_k_cnn}')
+        print(f'Best Fold: {np.argmax(cnn_scores)}, Best Score: {max(cnn_scores)}')
+        print()
+        print('Edited Nearest Neighbors:')
+        print(f'Best K: {best_k_enn}')
+       # print(f'Best Fold: {np.argmax(enn_scores)}, Best Score: {max(enn_scores)}')
         print()
 
-    for data in [abalone, forest, machine]:
-        knn = KNearestNeighbor(data.label, k=1)
-        best_score = np.inf
-        best_sigma = None
-        best_k = None
-        for sigma in [1, 0.8, 0.5, 0.3, 0.15, 0.1, 0.005, 0.001, 0.0008, 0.0005, 0.0003]:
-            score, k = tuning(data, knn, mse, sigma)
-            if score < best_score:
-                best_score = score
-                best_sigma = sigma
-                best_k = k
-        data.sigma = best_sigma
-        data.k = best_k
-        print(f'Name: {data.name}')
-        print(f'Best k-value: {best_k}, Best Sigma: {best_sigma}')
 
-        scores = cross_validation(knn, data.df, data.folds, data.label, mse)
-        print(f'Best Fold: {np.argmin(scores)}, Best Score: {min(scores)}')
-        print()
-
-#    print(knn_results)
-#    print(cnn_results)
-#    print(enn_results)
-#    print(f"Best knn k-value, epsilon, sigma: {knn_k, knn_epsilon, knn_sigma}")
-#    print(f"Best cnn k-value epsilon, sigma: {cnn_k, cnn_epsilon, cnn_sigma}")
-#    print(f"Best enn k-value epsilon, sigma: {enn_k, enn_epsilon, enn_sigma}")
-#
-#     knn_results = {
-#         'Fold #': [],
-#         'Training Size': [],
-#         'Test Size': [],
-#         'Accuracy of Error': []
-#     }
-#     cnn_results = {
-#         'Fold #': [],
-#         'Training Size': [],
-#         'Test Size': [],
-#         'Accuracy of Error': []
-#     }
-#
-#     enn_results = {
-#         'Fold #': [],
-#         'Training Size': [],
-#         'Test Size': [],
-#         'Accuracy of Error': []
-#     }
-#     knn_k = 11
-#     cnn_k = 9
-#     enn_k = 19
-#     cnn_train = condensed_edited_nearest_neighbor(tuning_train, label, k=3)
-#     enn_train = condensed_edited_nearest_neighbor(tuning_train, label, k=1, condensed=False)
-#
-#     for i in range(len(folds)):
-#         train = data.drop(folds[i].index)
-#         test = folds[i]
-#         start = timer()
-#         knn_predicted = k_nearest_neighbors(train, test, label, classification, knn_k)
-#         end = timer()
-#         print(f'knn time: {end - start}')
-#         start = timer()
-#         cnn_predict = k_nearest_neighbors(cnn_train, test, label, classification, cnn_k)
-#         end = timer()
-#         print(f'cnn time: {end - start}')
-#         start = timer()
-#         enn_predict = k_nearest_neighbors(enn_train, test, label, classification, enn_k)
-#         end = timer()
-#         print(f'enn time: {end - start}')
-#         test_labels = test[label].to_list()
-#         knn_eval_results = eval_metric(test_labels, knn_predicted, eval_type)
-#         cnn_eval_results = eval_metric(test_labels, cnn_predict, eval_type)
-#         enn_eval_results = eval_metric(test_labels, enn_predict, eval_type)
-#
-#         knn_results['Fold #'].append(i)
-#         knn_results['Training Size'].append(len(train))
-#         knn_results['Test Size'].append(len(test))
-#         knn_results['Accuracy of Error'].append(knn_eval_results)
-#
-#         cnn_results['Fold #'].append(i)
-#         cnn_results['Training Size'].append(len(train))
-#         cnn_results['Test Size'].append(len(test))
-#         cnn_results['Accuracy of Error'].append(cnn_eval_results)
-#
-#         enn_results['Fold #'].append(i)
-#         enn_results['Training Size'].append(len(train))
-#         enn_results['Test Size'].append(len(test))
-#         enn_results['Accuracy of Error'].append(enn_eval_results)
-#
-#     print()
-#     print(f'knn_results: {knn_results}')
-#     print(f'cnn_results: {cnn_results}')
-#     print(f'enn_results: {enn_results}')
-#     print(f"Best knn fold: {max(knn_results, key=knn_results.get)}")
-#     print(f"Best cnn fold: {max(cnn_results, key=cnn_results.get)}")
-#     print(f"Best enn fold: {max(enn_results, key=enn_results.get)}")
-#
-#     print()
-#     print('knn:')
-#     print(f'The Best Eval Score: {max(knn_results["Accuracy of Error"])}')
-#     print(
-#         f'The Average of All Eval Scores: {sum(knn_results["Accuracy of Error"]) / len(knn_results["Accuracy of Error"])}')
-#     print()
-#     print('cnn:')
-#     print(f'The Best Eval Score: {max(cnn_results["Accuracy of Error"])}')
-#     print(
-#         f'The Average of All Eval Scores: {sum(cnn_results["Accuracy of Error"]) / len(cnn_results["Accuracy of Error"])}')
-#     print()
-#     print('enn:')
-#     print(f'The Best Eval Score: {max(enn_results["Accuracy of Error"])}')
-#     print(
-#         f'The Average of All Eval Scores: {sum(enn_results["Accuracy of Error"]) / len(enn_results["Accuracy of Error"])}')
+    # for data in [abalone, forest, machine]:
+    #     knn = NearestNeighbor(data.label, k=1)
+    #     best_score = np.inf
+    #     best_sigma = None
+    #     best_k = None
+    #     for sigma in [1, 0.8, 0.5, 0.3, 0.15, 0.1, 0.005, 0.001, 0.0008, 0.0005, 0.0003]:f
+    #         knn.sigma = sigma
+    #         score, k = tuning(data, knn, mse, sigma=sigma)
+    #         if score < best_score:
+    #             best_score = score
+    #             best_sigma = sigma
+    #             best_k = k
+    #     data.sigma = best_sigma
+    #     data.k = best_k
+    #     print(f'Name: {data.name}')
+    #     print(f'Best k-value: {best_k}, Best Sigma: {best_sigma}')
+    #
+    #     scores = cross_validation(knn, data.df, data.folds, data.label, mse)
+    #     print(f'Best Fold: {np.argmin(scores)}, Best Score: {min(scores)}')
+    #     print()
